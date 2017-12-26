@@ -1,54 +1,51 @@
-#include "libft.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2013/12/22 18:44:07 by gpetrov           #+#    #+#             */
+/*   Updated: 2014/01/23 16:53:17 by wbeets           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
-#include <stdlib.h>
-#include <unistd.h>
 
-int	fd_to_dest(int const fd, char **dest)
+char	*biggerbuf(int const fd, char *buf, int *ret)
 {
-	static char	buff;
-	int			octets;
-    char        *str;
+	char	tmp[BUFF_SIZE + 1];
+	char	*tmp2;
 
-    buff[BUFF_SIZE + 1] = {'\n'};
-	octets = read(fd, buff, BUFF_SIZE);
-	if (octets > 0)
-	{
-        buff[octets] = '\0';
-        str = ft_strjoin(*dest, buff);
-        if (!str)
-            return (-1);
-        free(*dest);
-        *dest = str;
-	}
-	return (octets);
+	*ret = read(fd, tmp, BUFF_SIZE);
+	tmp[*ret] = '\0';
+	tmp2 = buf;
+	buf = ft_strjoin(buf, tmp);
+	ft_strdel(&tmp2);
+	return (buf);
 }
 
-int get_next_line(int const fd, char **line)
+int		get_next_line(int const fd, char ** line)
 {
-	static char	*dest = NULL;
-	char		*n_index;
-    int         octets;
+	static char		*buf = "";
+	int				ret;
+	char			*str;
 
-    if (!dest && (dest = (char *)ft_memalloc(sizeof(char))) == NULL)
-        return (-1);
-	n_index = ft_strchr(dest, '\n');
-	while (n_index == NULL)
+	if (!line || fd < 0)
+		return (-1);
+	ret = 1;
+	if (buf[0] == '\0')
+		buf = ft_strnew(0);
+	while (ret > 0)
 	{
-        octets = fd_to_dest(fd, &dest);
-        if (octets == 0)
-        {
-            if ((n_index = ft_strchr(dest, '\0')) == dest)
-                return (0);
-        } else if (octets < 0)
-            return (-1);
-        else
-            n_index = ft_strchr(dest, '\n');
+		if ((str = ft_strchr(buf, '\n')) != NULL)
+		{
+			*str = '\0';
+			*line = ft_strdup(buf);
+			ft_memmove(buf, str + 1, ft_strlen(str + 1) + 1);
+			return (1);
+		}
+		buf = biggerbuf(fd, buf, &ret);
 	}
-    *line = ft_strsub(dest, 0, n_index - dest);
-    if (!*line)
-        return (-1);
-    n_index = ft_strdup(n_index + 1);
-    free(dest);
-    dest = n_index;
-	return (1);
+	return (ret);
 }
