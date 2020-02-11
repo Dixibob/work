@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 #include <vector>
 
 using namespace std;
@@ -72,14 +71,7 @@ void		ft_polynome2(float A, float B, float C)
 	float	Delta(0.0), X1(0.0), X2(0.0);
 
 	cout << "Polynomial degree : 2" << endl;
-
-	cout << "A = " << A << endl;
-	cout << "B = " << B << endl;
-	cout << "C = " << C << endl;
-
 	Delta = (B*B)-(4*A*C);
-	cout << "Delta : " << Delta << endl;
-
 	if (Delta == 0.0)
 	{
 		X1 = -B /(2*A);
@@ -144,9 +136,9 @@ void		ft_form(char *str, int i, float A, float B, float C)
 			x++;
 			i++;
 		}
-		tmp[x] = str[i]; // X
-		tmp[x+1] = str[i+1]; // ^
-		tmp[x+2] = str[i+2]; // P
+		tmp[x] = str[i];
+		tmp[x+1] = str[i+1];
+		tmp[x+2] = str[i+2];
 		tmp[x+3] = '\0';
 		
 		if (tmp[x+2] == '0')
