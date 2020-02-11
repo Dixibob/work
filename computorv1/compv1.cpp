@@ -52,6 +52,81 @@ float		ft_recup_valeur(char *str)
 	return (valeur);
 }
 
+float		ft_sqrt(float nb)
+{
+	float 	i(0.0);
+
+	if (nb <= 0)
+		return (0);
+	while (i * i <= nb)
+	{
+		if (i * i == nb)
+			return (i);
+		i += 0.000001;
+	}
+	return (0);
+}
+
+void		ft_polynome2(float A, float B, float C)
+{
+	float	Delta(0.0), X1(0.0), X2(0.0);
+
+	cout << "Polynomial degree : 2" << endl;
+
+	cout << "A = " << A << endl;
+	cout << "B = " << B << endl;
+	cout << "C = " << C << endl;
+
+	Delta = (B*B)-(4*A*C);
+	cout << "Delta : " << Delta << endl;
+
+	if (Delta == 0.0)
+	{
+		X1 = -B /(2*A);
+		cout << "la solution unique est xs = " << X1;
+	}
+	if (Delta > 0.0)
+	{
+		X1 = (-B - ft_sqrt(Delta))/(2*A);
+		X2 = (-B + ft_sqrt(Delta))/(2*A);
+		cout << "les deux racines sont : x1 = " << X1 << " et x2 = " << X2 << endl;
+	}
+	if (Delta < 0.0)
+		cout << "l'equation n'admet pas de solution";
+}
+
+void		ft_polynome(float B, float C, float X)
+{
+	X = (-C) / B;
+
+	cout << "Polynomial degree : 1" << endl;
+	if (B != 0 && C != 0)
+		cout << "La solution de l'equation est : x = " << X << endl;
+	else if (B != 0 && C == 0)
+    	cout << "La solution de l'equation est : x = " << X << endl;
+	else
+		cout << "Il n'y a pas de solution a l'equation" << endl;
+}
+
+void		ft_print_form(float A, float B, float C)
+{
+	cout << "Reduced form: ";
+	if (A < 0)
+		cout << "- " << (-1*A) << " * X^2 ";
+	else if (A > 0)
+		cout << A << " * X^2 ";
+	if (B < 0)
+		cout << "- " << (-1*B) << " * X^1 ";
+	else if (B >= 0 && A != 0)
+		cout << "+ " << B << " * X^1 ";
+	else
+		cout << B << " * X^1 ";
+	if (C < 0)
+		cout << "- " << (-1*C) << " * X^0 = 0" << endl;
+	else
+		cout << "+ " << C << " * X^0 = 0" << endl;
+}
+
 void		ft_form(char *str, int i, float A, float B, float C)
 {
 	int		x(0);
@@ -81,8 +156,6 @@ void		ft_form(char *str, int i, float A, float B, float C)
 		else if (tmp[x+2] == '2')
 			A += ft_recup_valeur(tmp);
 
-		cout << tmp << endl;
-		
 		if (str[i+3] != '\0')
 		{
 			i = i+3;
@@ -90,9 +163,11 @@ void		ft_form(char *str, int i, float A, float B, float C)
 		}
 		else
 		{
-			cout << "Reduced form: "
-			if (A < 0)
-			cout << "Reduced form: " << A << "X^2 + " << B << "X + " << C << " = 0" << endl;
+			ft_print_form(A, B, C);
+			if (A != 0)
+				ft_polynome2(A, B, C);
+			else
+				ft_polynome(B, C, 0);
 		}
 	}
 }
